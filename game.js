@@ -46,7 +46,7 @@ class EscapeGame {
             { floor: 'B1', name: '식품관', title: '🍳 셰프의 레시피를 완성하세요!', description: '롯데문화센터에서 배운 레시피를 떠올려\n식품관에서 재료를 준비하고, 요리해보세요!\n(올바른 조리 순서대로 정렬하세요.)' },
             { floor: '1F', name: '화장품', title: '💄 뷰티 전문관 오픈!', description: '신상 립스틱의 시그니처 컬러를 조합하세요.\n3가지 색상을 올바른 순서로 선택하면 됩니다!' },
             { floor: '3F', name: '패션', title: '👔 남성복 브랜드 \'테일던\' 1호 매장 오픈!', description: 'VIP 고객의 스타일링을 완성해주세요.\n어울리는 아이템 3개를 골라주세요!' },
-            { floor: '5F', name: '키즈', title: '🧸 킨더유니버스 탈출!', description: '아이들이 좋아하는 캐릭터를 찾아주세요.\n그림에 맞는 동물 이름을 순서대로 맞춰보세요!' },
+            { floor: '5F', name: '키즈', title: '🧸 킨더유니버스 탈출!', description: '킨더유니버스 친구들을 찾아주세요.\n설명을 읽고 캐릭터 이름을 맞춰보세요!' },
             { floor: '출구', name: '탈출!', title: '🚪 최종 탈출 암호!', description: '마지막 관문! 탈출 암호를 맞추면 백화점을 빠져나갈 수 있습니다.' }
         ];
 
@@ -54,7 +54,7 @@ class EscapeGame {
             '조리 순서를 생각해보세요: 준비 → 가열 → 조리 → 마무리',
             '꽃 이름이 붙은 색 → 과일 이름이 붙은 색 → 순수한 색상 이름',
             '비즈니스 캐주얼은 격식과 편안함의 조화! 정장 구성 요소를 떠올려보세요.',
-            '이모지를 잘 보세요! 긴 코, 긴 목, 턱시도를 입은 새...',
+            '이모지를 잘 보세요! 릴라를 도와주는 건 소소, 책 읽는 로봇은 스티븐!',
             '지금 여러분이 있는 곳의 이름이에요!'
         ];
 
@@ -339,12 +339,12 @@ class EscapeGame {
         });
     }
 
-    // ===== 퍼즐 4: 키즈 - 동물 퀴즈 =====
+    // ===== 퍼즐 4: 키즈 - 킨더유니버스 캐릭터 맞추기 =====
     loadKidsPuzzle(area, stage) {
         const quiz = [
-            { emoji: '🐘', answer: '코끼리' },
-            { emoji: '🦒', answer: '기린' },
-            { emoji: '🐧', answer: '펭귄' },
+            { hint: '릴라를 쫓아다니며 항상 도와주는 요정 🌸', answer: '소소' },
+            { hint: '로봇으로 태어났지만 책으로 세상을 배우는 📚', answer: '스티븐' },
+            { hint: '틀 대로 사는 무계획의 아이콘! 귀여운 요정 🎀', answer: '루카' },
         ];
         this.kidsAnswers = [];
         this.kidsCorrect = quiz.map(q => q.answer);
@@ -356,8 +356,8 @@ class EscapeGame {
             <p class="puzzle-description">${stage.description}</p>
             <div class="puzzle-content">
                 <div class="kids-quiz">
-                    <div class="kids-emoji">${quiz[0].emoji}</div>
-                    <p class="kids-question">이 동물의 이름은? <span id="kids-progress">(1/3)</span></p>
+                    <div class="kids-emoji" style="font-size:18px; background:var(--bg-card); padding:15px; border-radius:12px; margin-bottom:15px;">${quiz[0].hint}</div>
+                    <p class="kids-question">이 캐릭터의 이름은? <span id="kids-progress">(1/3)</span></p>
                     <div class="kids-choices" id="kids-choices"></div>
                 </div>
             </div>
@@ -367,11 +367,11 @@ class EscapeGame {
     }
 
     renderKidsChoices(quiz) {
-        const allAnimals = ['코끼리', '기린', '펭귄', '사자', '호랑이', '토끼', '곰', '여우', '판다'];
+        const allCharacters = ['소소', '스티븐', '루카', '모가나', '알롱', '더스틴', '트트', '릴라', '달리'];
         const current = quiz[this.currentQuizIndex];
 
         let choices = [current.answer];
-        const others = allAnimals.filter(a => a !== current.answer);
+        const others = allCharacters.filter(a => a !== current.answer);
         while (choices.length < 4) {
             const rand = others[Math.floor(Math.random() * others.length)];
             if (!choices.includes(rand)) choices.push(rand);
@@ -383,24 +383,25 @@ class EscapeGame {
 
         el.querySelectorAll('.kids-choice-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                this.kidsAnswers.push(btn.textContent);
-                this.currentQuizIndex++;
+                if (btn.textContent === current.answer) {
+                    // 정답
+                    this.kidsAnswers.push(btn.textContent);
+                    this.currentQuizIndex++;
 
-                if (this.currentQuizIndex >= quiz.length) {
-                    if (this.kidsAnswers.every((a, i) => a === this.kidsCorrect[i])) {
+                    if (this.currentQuizIndex >= quiz.length) {
                         this.stageClear();
                     } else {
-                        this.showFeedback(false);
-                        this.kidsAnswers = [];
-                        this.currentQuizIndex = 0;
-                        document.querySelector('.kids-emoji').textContent = quiz[0].emoji;
-                        document.getElementById('kids-progress').textContent = '(1/3)';
-                        this.renderKidsChoices(quiz);
+                        this.showFeedback(true);
+                        setTimeout(() => {
+                            document.querySelector('.kids-emoji').textContent = quiz[this.currentQuizIndex].hint;
+                            document.getElementById('kids-progress').textContent = `(${this.currentQuizIndex + 1}/3)`;
+                            this.renderKidsChoices(quiz);
+                        }, 800);
                     }
                 } else {
-                    document.querySelector('.kids-emoji').textContent = quiz[this.currentQuizIndex].emoji;
-                    document.getElementById('kids-progress').textContent = `(${this.currentQuizIndex + 1}/3)`;
-                    this.renderKidsChoices(quiz);
+                    // 오답 - 같은 문제 다시
+                    this.showFeedback(false);
+                    setTimeout(() => this.renderKidsChoices(quiz), 800);
                 }
             });
         });
