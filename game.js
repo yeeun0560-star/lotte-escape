@@ -405,3 +405,180 @@ class EscapeGame {
             });
         });
     }
+
+    // ===== 퍼즐 5: 출구 - 단어 맞추기 =====
+    loadExitPuzzle(area, stage) {
+        this.exitAnswer = '롯데백화점';
+        this.exitInput = [];
+        const letters = '롯데백화점쇼핑몰라인마트'.split('');
+        const shuffled = [...letters].sort(() => Math.random() - 0.5);
+
+        area.innerHTML = `
+            <img src="${this.stageImages[4]}" alt="출구" class="puzzle-image">
+            <h2 class="puzzle-title">${stage.title}</h2>
+            <p class="puzzle-description">${stage.description}</p>
+            <div class="puzzle-content exit-puzzle">
+                <div class="password-clue">
+                    <p>🔍 <strong>최종 단서:</strong></p>
+                    <p>• 이 건물의 이름은 무엇일까요?</p>
+                    <p>• 5글자입니다</p>
+                </div>
+                <div class="word-slots" id="word-slots">
+                    ${this.exitAnswer.split('').map(() => '<div class="word-slot"></div>').join('')}
+                </div>
+                <div class="letter-choices" id="letter-choices">
+                    ${shuffled.map(l => `<button class="letter-btn" data-letter="${l}">${l}</button>`).join('')}
+                </div>
+                <button class="btn-submit" id="btn-reset-word" style="background:rgba(255,255,255,0.1);box-shadow:none;color:#fff;margin-top:15px;font-size:14px;padding:10px 20px;">다시 입력</button>
+            </div>
+        `;
+
+        area.querySelectorAll('.letter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.classList.contains('used') || this.exitInput.length >= this.exitAnswer.length) return;
+                btn.classList.add('used');
+                this.exitInput.push(btn.dataset.letter);
+                this.updateWordSlots();
+
+                if (this.exitInput.length === this.exitAnswer.length) {
+                    setTimeout(() => {
+                        if (this.exitInput.join('') === this.exitAnswer) {
+                            this.stageClear();
+                        } else {
+                            this.showFeedback(false);
+                            this.resetWordPuzzle();
+                        }
+                    }, 500);
+                }
+            });
+        });
+
+        document.getElementById('btn-reset-word').addEventListener('click', () => this.resetWordPuzzle());
+    }
+
+    resetWordPuzzle() {
+        this.exitInput = [];
+        document.querySelectorAll('.letter-btn').forEach(b => b.classList.remove('used'));
+        this.updateWordSlots();
+    }
+
+    updateWordSlots() {
+        document.querySelectorAll('#word-slots .word-slot').forEach((slot, idx) => {
+            slot.textContent = idx < this.exitInput.length ? this.exitInput[idx] : '';
+            slot.classList.toggle('filled', idx < this.exitInput.length);
+        });
+    }
+
+    // ===== 공통: 힌트 =====
+    showHint() {
+        if (this.hintsLeft <= 0) return;
+        this.hintsLeft--;
+        document.getElementById('hint-count').textContent = this.hintsLeft;
+        if (this.hintsLeft <= 0) document.getElementById('hint-btn').disabled = true;
+
+        const modal = document.createElement('div');
+        modal.className = 'hint-modal';
+        modal.innerHTML = `
+            <div class="hint-box">
+                <h3>💡 힌트</h3>
+                <p>${this.hints[this.currentStage]}</p>
+                <button class="hint-close">확인</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.querySelector('.hint-close').addEventListener('click', () => modal.remove());
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    }
+
+    // ===== 공통: 스테이지 클리어 =====
+    stageClear() {
+        this.showFeedback(true);
+        setTimeout(() => {
+            this.currentStage++;
+            if (this.currentStage >= this.totalStages) {
+                this.gameWin();
+            } else {
+                this.updateProgressBar();
+                this.loadPuzzle();
+            }
+        }, 1200);
+    }
+
+    // ===== 공통: 피드백 =====
+    showFeedback(isCorrect) {
+        const el = document.createElement('div');
+        el.className = `feedback ${isCorrect ? 'correct' : 'wrong'}`;
+        el.textContent = isCorrect ? '✅ 정답!' : '❌ 다시 시도해보세요!';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1500);
+    }
+
+    // ===== 게임 승리 =====
+    gameWin() {
+        clearInterval(this.timerInterval);
+        const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+        document.getElementById('clear-time').textContent = `${Math.floor(elapsed / 60)}분 ${elapsed % 60}초`;
+
+        const branch = this.selectedBranch;
+        document.getElementById('coupon-desc').innerHTML = branch.coupon;
+        document.getElementById('coupon-branch').textContent = `📍 ${branch.name}`;
+        document.getElementById('coupon-code').textContent =
+            `LOTTE-${branch.id.toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+
+        this.showScreen('success-screen');
+        this.createConfetti();
+    }
+
+    // ===== 게임 오버 =====
+    gameOver() {
+        clearInterval(this.timerInterval);
+        const floorNames = ['B1 식품관', '1F 화장품', '3F 패션', '5F 키즈', '출구'];
+        document.getElementById('fail-floor-text').textContent = floorNames[this.currentStage];
+        this.showScreen('fail-screen');
+    }
+
+    // ===== 게임 리셋 =====
+    resetGame() {
+        clearInterval(this.timerInterval);
+        this.currentStage = 0;
+        this.hintsLeft = 3;
+        this.selectedBranch = null;
+        document.getElementById('hint-count').textContent = '3';
+        document.getElementById('hint-btn').disabled = false;
+        document.getElementById('timer').classList.remove('warning');
+        this.showScreen('branch-screen');
+    }
+
+    // ===== 결과 공유 =====
+    shareResult() {
+        const time = document.getElementById('clear-time').textContent;
+        const text = `🎉 롯데백화점 탈출 성공! ⏱️ ${time}\n나도 도전해보세요! #롯데백화점탈출`;
+        if (navigator.share) {
+            navigator.share({ title: '롯데백화점 탈출하기', text });
+        } else {
+            navigator.clipboard.writeText(text).then(() => alert('결과가 클립보드에 복사되었습니다!'));
+        }
+    }
+
+    // ===== 축하 효과 =====
+    createConfetti() {
+        const container = document.getElementById('confetti');
+        container.innerHTML = '';
+        const colors = ['#c8e600', '#ffc107', '#4caf50', '#2196f3', '#e8ff4a', '#9c27b0'];
+        for (let i = 0; i < 60; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + '%';
+            piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            piece.style.animationDelay = Math.random() * 2 + 's';
+            piece.style.width = (Math.random() * 10 + 5) + 'px';
+            piece.style.height = (Math.random() * 10 + 5) + 'px';
+            piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            container.appendChild(piece);
+        }
+    }
+}
+
+// 게임 시작
+document.addEventListener('DOMContentLoaded', () => new EscapeGame());
