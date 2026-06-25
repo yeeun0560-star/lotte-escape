@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>롯데백화점 탈출하기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- 지점 선택 화면 -->
+        <div id="branch-screen" class="screen active">
+            <div class="start-content">
+                <div class="logo-area">
+                    <div class="lotte-logo">LOTTE</div>
+                    <div class="dept-store">DEPARTMENT STORE</div>
+                </div>
+                <h1 class="game-title" style="font-size:26px;">롯데백화점 탈출하기</h1>
+                <p class="game-subtitle" style="margin-bottom:20px;">나의 지점을 선택해주세요</p>
+                <div class="branch-select" id="branch-list">
+                    <!-- 지점 목록이 JS에서 동적으로 생성됨 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 시작 화면 -->
+        <div id="start-screen" class="screen">
+            <button class="btn-back" id="btn-back-branch">←</button>
+            <div class="start-content">
+                <div class="logo-area">
+                    <div class="lotte-logo">LOTTE</div>
+                    <div class="dept-store">DEPARTMENT STORE</div>
+                </div>
+                <img id="branch-image" src="" alt="지점 사진" class="start-image">
+                <h1 class="game-title">롯데백화점 탈출하기</h1>
+                <p class="game-subtitle" id="start-subtitle">폐점 시간이 지났습니다!<br>5개 층의 퍼즐을 풀고 백화점을 탈출하세요!</p>
+                <div class="difficulty-select">
+                    <p>난이도를 선택하세요</p>
+                    <button class="btn-difficulty" data-time="600">🟢 쉬움 (10분)</button>
+                    <button class="btn-difficulty" data-time="420">🟡 보통 (7분)</button>
+                    <button class="btn-difficulty" data-time="300">🔴 어려움 (5분)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 게임 화면 -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="timer-area">
+                    <span class="timer-icon">⏰</span>
+                    <span id="timer">10:00</span>
+                </div>
+                <div class="hint-area">
+                    <button id="hint-btn" class="btn-hint">💡 힌트 <span id="hint-count">3</span></button>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-step" data-step="1">B1<br>식품관</div>
+                <div class="progress-step" data-step="2">1F<br>화장품</div>
+                <div class="progress-step" data-step="3">3F<br>패션</div>
+                <div class="progress-step" data-step="4">5F<br>키즈</div>
+                <div class="progress-step" data-step="5">출구<br>탈출!</div>
+            </div>
+
+            <div id="puzzle-area" class="puzzle-area">
+                <!-- 퍼즐 내용이 동적으로 삽입됨 -->
+            </div>
+        </div>
+
+        <!-- 성공 화면 -->
+        <div id="success-screen" class="screen">
+            <div class="success-content">
+                <div class="confetti-container" id="confetti"></div>
+                <h1>🎉 탈출 성공! 🎉</h1>
+                <p class="success-time">탈출 시간: <span id="clear-time"></span></p>
+                <div class="coupon-area">
+                    <div class="coupon">
+                        <div class="coupon-header">★ LOTTE DEPARTMENT STORE ★</div>
+                        <div class="coupon-body">
+                            <p class="coupon-title">🎁 축하 쿠폰 🎁</p>
+                            <p class="coupon-desc" id="coupon-desc">롯데백화점<br>5% 할인 쿠폰</p>
+                            <p class="coupon-branch" id="coupon-branch"></p>
+                            <p class="coupon-code" id="coupon-code">LOTTE-ESCAPE-2024</p>
+                            <p class="coupon-expire">유효기간: 발급일로부터 30일</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn-restart" class="btn-primary">다시 도전하기</button>
+                <button id="btn-share" class="btn-secondary">결과 공유하기</button>
+            </div>
+        </div>
+
+        <!-- 실패 화면 -->
+        <div id="fail-screen" class="screen">
+            <div class="fail-content">
+                <h1>⏰ 시간 초과! ⏰</h1>
+                <p>아쉽게도 시간 안에 탈출하지 못했습니다...</p>
+                <p class="fail-floor">도달한 층: <span id="fail-floor-text"></span></p>
+                <button id="btn-retry" class="btn-primary">다시 도전하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
