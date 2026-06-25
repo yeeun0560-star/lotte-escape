@@ -20,26 +20,26 @@ class EscapeGame {
         this.selectedBranch = null;
 
         this.branches = [
-            { id: 'jamsil', name: '잠실점', sub: '서울 송파구', icon: '🏢', image: 'images/지점별 사진/백화점 잠실점_D09_R copy.jpg', coupon: '잠실점 전 매장 5% 할인' },
-            { id: 'bonjeom', name: '본점', sub: '서울 중구', icon: '⭐', image: 'images/지점별 사진/백화점 본점.jpg', coupon: '본점 전 매장 5% 할인' },
-            { id: 'gangnam', name: '강남점', sub: '서울 강남구', icon: '💎', image: 'images/지점별 사진/백화점 강남점_D01.jpg', coupon: '강남점 뷰티 15% 할인' },
-            { id: 'busan', name: '부산본점', sub: '부산 부산진구', icon: '🌊', image: 'images/지점별 사진/백화점 부산본점.jpg', coupon: '부산본점 전 매장 5% 할인' },
-            { id: 'daejeon', name: '대전점', sub: '대전 서구', icon: '🌳', image: 'images/지점별 사진/백화점 대전점_D01.jpg', coupon: '대전점 전 매장 5% 할인' },
-            { id: 'gwangbok', name: '광복점', sub: '부산 중구', icon: '⛵', image: 'images/지점별 사진/백화점 광복점.jpg', coupon: '광복점 패션 10% 할인' },
-            { id: 'centum', name: '센텀시티점', sub: '부산 해운대구', icon: '🏖️', image: 'images/지점별 사진/백화점 센텀시티점.jpg', coupon: '센텀시티점 전 매장 5% 할인' },
-            { id: 'daegu', name: '대구점', sub: '대구 동구', icon: '🌸', image: 'images/지점별 사진/백화점 대구점.jpg', coupon: '대구점 패션 10% 할인' },
-            { id: 'gwangju', name: '광주점', sub: '광주 동구', icon: '☀️', image: 'images/지점별 사진/백화점 광주.jpg', coupon: '광주점 전 매장 5% 할인' },
-            { id: 'suwon', name: '수원점', sub: '경기 수원시', icon: '🏯', image: 'images/지점별 사진/백화점 수원점.jpg', coupon: '수원점 전 매장 5% 할인' },
-            { id: 'incheon', name: '인천터미널점', sub: '인천 미추홀구', icon: '✈️', image: 'images/지점별 사진/백화점 인천터미널점_보정.jpg', coupon: '인천터미널점 리빙 10% 할인' },
-            { id: 'dongtan', name: '동탄점', sub: '경기 화성시', icon: '🏙️', image: 'images/지점별 사진/백화점 동탄점_D02.jpg', coupon: '동탄점 전 매장 5% 할인' },
+            { id: 'jamsil', name: '잠실점', sub: '서울 송파구', icon: '🏢', image: 'images/jamsil.jpg', coupon: '잠실점 전 매장 5% 할인' },
+            { id: 'bonjeom', name: '본점', sub: '서울 중구', icon: '⭐', image: 'images/bonjeom.jpg', coupon: '본점 전 매장 5% 할인' },
+            { id: 'gangnam', name: '강남점', sub: '서울 강남구', icon: '💎', image: 'images/gangnam.jpg', coupon: '강남점 뷰티 15% 할인' },
+            { id: 'busan', name: '부산본점', sub: '부산 부산진구', icon: '🌊', image: 'images/busan.jpg', coupon: '부산본점 전 매장 5% 할인' },
+            { id: 'daejeon', name: '대전점', sub: '대전 서구', icon: '🌳', image: 'images/daejeon.jpg', coupon: '대전점 전 매장 5% 할인' },
+            { id: 'gwangbok', name: '광복점', sub: '부산 중구', icon: '⛵', image: 'images/gwangbok.jpg', coupon: '광복점 패션 10% 할인' },
+            { id: 'centum', name: '센텀시티점', sub: '부산 해운대구', icon: '🏖️', image: 'images/centum.jpg', coupon: '센텀시티점 전 매장 5% 할인' },
+            { id: 'daegu', name: '대구점', sub: '대구 동구', icon: '🌸', image: 'images/daegu.jpg', coupon: '대구점 패션 10% 할인' },
+            { id: 'gwangju', name: '광주점', sub: '광주 동구', icon: '☀️', image: 'images/gwangju.jpg', coupon: '광주점 전 매장 5% 할인' },
+            { id: 'suwon', name: '수원점', sub: '경기 수원시', icon: '🏯', image: 'images/suwon.jpg', coupon: '수원점 전 매장 5% 할인' },
+            { id: 'incheon', name: '인천터미널점', sub: '인천 미추홀구', icon: '✈️', image: 'images/incheon.jpg', coupon: '인천터미널점 리빙 10% 할인' },
+            { id: 'dongtan', name: '동탄점', sub: '경기 화성시', icon: '🏙️', image: 'images/dongtan.jpg', coupon: '동탄점 전 매장 5% 할인' },
         ];
 
         this.stageImages = [
-            'images/1.jpg',
-            'images/2.jpg',
-            'images/3.jpg',
-            'images/4.jpg',
-            'images/5.jpg'
+            'images/stage1.jpg',
+            'images/stage2.jpg',
+            'images/stage3.jpg',
+            'images/stage4.jpg',
+            'images/stage5.jpg'
         ];
 
         this.stages = [
