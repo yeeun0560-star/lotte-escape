@@ -345,15 +345,15 @@ class EscapeGame {
     loadKidsPuzzle(area, stage) {
         // 캐릭터 풀 (캐릭터별 개별 이미지 + 친근한 설명)
         const allChars = [
-            { name: '소소', desc: '🌸 릴라를 쫓아다니며 도와주는 요정이에요!', img: 'images/SOSO.png?v=7' },
-            { name: '스티븐', desc: '🤖 책으로 세상을 배우는 똑똑한 로봇이에요!', img: 'images/STIVEN.png?v=7' },
-            { name: '루카', desc: '🎀 아무 생각 없이 사는 귀여운 요정이에요!', img: 'images/LUKA.png?v=7' },
-            { name: '모가나', desc: '🌿 불안과 걱정을 먹는 이끼 친구예요!', img: 'images/MOGANA.png?v=7' },
-            { name: '알롱', desc: '🧦 코가 양말로 되어 있는 패셔니스타예요!', img: 'images/ALLONG.png?v=7' },
-            { name: '더스틴', desc: '🌻 모든 걸 알고 있는 척척박사 꽃이에요!', img: 'images/DUSTIN.png?v=7' },
-            { name: '트트', desc: '🌳 호기심 많은 능동적인 나무 친구예요!', img: 'images/TUTU.png?v=7' },
-            { name: '랄라', desc: '😄 항상 해맑고 놀기를 좋아하는 아이예요!', img: 'images/LALLA.png?v=7' },
-            { name: '달리', desc: '🐶 킨더유니버스까지 따라온 강아지 친구예요!', img: 'images/DALLI.png?v=7' },
+            { name: '소소', desc: '🌸 릴라를 쫓아다니며 도와주는 요정이에요!', img: 'SOSO.png?v=8' },
+            { name: '스티븐', desc: '🤖 책으로 세상을 배우는 똑똑한 로봇이에요!', img: 'STIVEN.png?v=8' },
+            { name: '루카', desc: '🎀 아무 생각 없이 사는 귀여운 요정이에요!', img: 'LUKA.png?v=8' },
+            { name: '모가나', desc: '🌿 불안과 걱정을 먹는 이끼 친구예요!', img: 'MOGANA.png?v=8' },
+            { name: '알롱', desc: '🧦 코가 양말로 되어 있는 패셔니스타예요!', img: 'ALLONG.png?v=8' },
+            { name: '더스틴', desc: '🌻 모든 걸 알고 있는 척척박사 꽃이에요!', img: 'DUSTIN.png?v=8' },
+            { name: '트트', desc: '🌳 호기심 많은 능동적인 나무 친구예요!', img: 'TUTU.png?v=8' },
+            { name: '랄라', desc: '😄 항상 해맑고 놀기를 좋아하는 아이예요!', img: 'LALLA.png?v=8' },
+            { name: '달리', desc: '🐶 킨더유니버스까지 따라온 강아지 친구예요!', img: 'DALLI.png?v=8' },
         ];
 
         // 3문제 랜덤 선택
