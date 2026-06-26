@@ -46,7 +46,7 @@ class EscapeGame {
             { floor: 'B1', name: '식품관', title: '🍳 셰프의 레시피를 완성하세요!', description: '롯데문화센터에서 배운 레시피를 떠올려\n식품관에서 재료를 준비하고, 요리해보세요!\n(올바른 조리 순서대로 정렬하세요.)' },
             { floor: '1F', name: '화장품', title: '💄 뷰티 전문관 오픈!', description: '신상 립스틱의 시그니처 컬러를 조합하세요.\n3가지 색상을 올바른 순서로 선택하면 됩니다!' },
             { floor: '3F', name: '패션', title: '👔 남성복 브랜드 \'테일던\' 1호 매장 오픈!', description: 'VIP 고객의 스타일링을 완성해주세요.\n어울리는 아이템 3개를 골라주세요!' },
-            { floor: '5F', name: '키즈', title: '🧸 킨더유니버스 탈출!', description: '킨더유니버스 친구들을 찾아주세요.\n설명을 읽고 캐릭터 이름을 맞춰보세요!' },
+            { floor: '5F', name: '키즈', title: '🧸 킨더유니버스 탈출!', description: '킨더유니버스 친구들을 만나보세요!\n사진과 설명을 보고 이름을 맞춰주세요.' },
             { floor: '출구', name: '탈출!', title: '🚪 최종 탈출 암호!', description: '마지막 관문! 탈출 암호를 맞추면 백화점을 빠져나갈 수 있습니다.' }
         ];
 
@@ -54,7 +54,7 @@ class EscapeGame {
             '조리 순서를 생각해보세요: 준비 → 가열 → 조리 → 마무리',
             '꽃 이름이 붙은 색 → 과일 이름이 붙은 색 → 순수한 색상 이름',
             '비즈니스 캐주얼은 격식과 편안함의 조화! 정장 구성 요소를 떠올려보세요.',
-            '이모지를 잘 보세요! 릴라를 도와주는 건 소소, 책 읽는 로봇은 스티븐!',
+            '사진을 잘 보세요! 설명에 캐릭터의 특징이 담겨있어요 (나무, 강아지, 로봇 등)',
             '지금 여러분이 있는 곳의 이름이에요!'
         ];
 
@@ -341,37 +341,48 @@ class EscapeGame {
 
     // ===== 퍼즐 4: 키즈 - 킨더유니버스 캐릭터 맞추기 =====
     loadKidsPuzzle(area, stage) {
-        const quiz = [
-            { hint: '릴라를 쫓아다니며 항상 도와주는 요정 🌸', answer: '소소' },
-            { hint: '로봇으로 태어났지만 책으로 세상을 배우는 📚', answer: '스티븐' },
-            { hint: '틀 대로 사는 무계획의 아이콘! 귀여운 요정 🎀', answer: '루카' },
+        // 캐릭터 풀 (이미지 + 친근한 설명)
+        const allChars = [
+            { name: '트트', desc: '🌳 호기심 많은 능동적인 나무 친구예요!', img: 'images/1.png' },
+            { name: '랄라', desc: '😄 항상 해맑고 놀기를 좋아하는 아이예요!', img: 'images/1.png' },
+            { name: '달리', desc: '🐶 킨더유니버스까지 따라온 강아지 친구예요!', img: 'images/1.png' },
+            { name: '소소', desc: '🌸 릴라를 쫓아다니며 도와주는 요정이에요!', img: 'images/2.jpeg' },
+            { name: '스티븐', desc: '🤖 책으로 세상을 배우는 똑똑한 로봇이에요!', img: 'images/2.jpeg' },
+            { name: '루카', desc: '🎀 아무 생각 없이 사는 귀여운 요정이에요!', img: 'images/2.jpeg' },
+            { name: '모가나', desc: '🌿 불안과 걱정을 먹는 이끼 친구예요!', img: 'images/3.jpeg' },
+            { name: '알롱', desc: '🧦 코가 양말로 되어 있는 패셔니스타예요!', img: 'images/3.jpeg' },
+            { name: '더스틴', desc: '🌻 모든 걸 알고 있는 척척박사 꽃이에요!', img: 'images/3.jpeg' },
         ];
-        this.kidsAnswers = [];
-        this.kidsCorrect = quiz.map(q => q.answer);
+
+        // 3문제 랜덤 선택
+        this.kidsQuiz = [...allChars].sort(() => Math.random() - 0.5).slice(0, 3);
+        this.kidsAllNames = allChars.map(c => c.name);
         this.currentQuizIndex = 0;
 
+        const first = this.kidsQuiz[0];
         area.innerHTML = `
-            <img src="${this.stageImages[3]}" alt="키즈" class="puzzle-image">
             <h2 class="puzzle-title">${stage.title}</h2>
             <p class="puzzle-description">${stage.description}</p>
             <div class="puzzle-content">
                 <div class="kids-quiz">
-                    <div class="kids-emoji" style="font-size:18px; background:var(--bg-card); padding:15px; border-radius:12px; margin-bottom:15px;">${quiz[0].hint}</div>
-                    <p class="kids-question">이 캐릭터의 이름은? <span id="kids-progress">(1/3)</span></p>
+                    <img id="kids-char-img" src="${first.img}" alt="캐릭터" class="puzzle-image" style="margin-bottom:15px;">
+                    <div class="kids-emoji" id="kids-desc" style="font-size:16px; background:var(--bg-card); padding:15px; border-radius:12px; margin-bottom:15px;">${first.desc}</div>
+                    <p class="kids-question">이 친구의 이름은? <span id="kids-progress">(1/3)</span></p>
                     <div class="kids-choices" id="kids-choices"></div>
                 </div>
             </div>
         `;
 
-        this.renderKidsChoices(quiz);
+        this.renderKidsChoices();
     }
 
-    renderKidsChoices(quiz) {
-        const allCharacters = ['소소', '스티븐', '루카', '모가나', '알롱', '더스틴', '트트', '릴라', '달리'];
+    renderKidsChoices() {
+        const quiz = this.kidsQuiz;
         const current = quiz[this.currentQuizIndex];
 
-        let choices = [current.answer];
-        const others = allCharacters.filter(a => a !== current.answer);
+        // 정답 + 랜덤 오답 3개
+        let choices = [current.name];
+        const others = this.kidsAllNames.filter(n => n !== current.name);
         while (choices.length < 4) {
             const rand = others[Math.floor(Math.random() * others.length)];
             if (!choices.includes(rand)) choices.push(rand);
@@ -383,25 +394,25 @@ class EscapeGame {
 
         el.querySelectorAll('.kids-choice-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                if (btn.textContent === current.answer) {
+                if (btn.textContent === current.name) {
                     // 정답
-                    this.kidsAnswers.push(btn.textContent);
                     this.currentQuizIndex++;
-
                     if (this.currentQuizIndex >= quiz.length) {
                         this.stageClear();
                     } else {
                         this.showFeedback(true);
                         setTimeout(() => {
-                            document.querySelector('.kids-emoji').textContent = quiz[this.currentQuizIndex].hint;
+                            const next = quiz[this.currentQuizIndex];
+                            document.getElementById('kids-char-img').src = next.img;
+                            document.getElementById('kids-desc').textContent = next.desc;
                             document.getElementById('kids-progress').textContent = `(${this.currentQuizIndex + 1}/3)`;
-                            this.renderKidsChoices(quiz);
+                            this.renderKidsChoices();
                         }, 800);
                     }
                 } else {
                     // 오답 - 같은 문제 다시
                     this.showFeedback(false);
-                    setTimeout(() => this.renderKidsChoices(quiz), 800);
+                    setTimeout(() => this.renderKidsChoices(), 800);
                 }
             });
         });
