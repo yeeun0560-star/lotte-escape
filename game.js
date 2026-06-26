@@ -18,6 +18,7 @@ class EscapeGame {
         this.hintsLeft = 3;
         this.startTime = null;
         this.selectedBranch = null;
+        this.transitioning = false;
 
         this.branches = [
             { id: 'jamsil', name: '잠실점', sub: '서울 송파구', icon: '🏢', image: 'images/jamsil.jpg', coupon: '잠실점 전 매장 5% 할인' },
@@ -54,7 +55,7 @@ class EscapeGame {
             '조리 순서를 생각해보세요: 준비 → 가열 → 조리 → 마무리',
             '꽃 이름이 붙은 색 → 과일 이름이 붙은 색 → 순수한 색상 이름',
             '비즈니스 캐주얼은 격식과 편안함의 조화! 정장 구성 요소를 떠올려보세요.',
-            '사진을 잘 보세요! 설명에 캐릭터의 특징이 담겨있어요 (나무, 강아지, 로봇 등)',
+            '이미지에 답이 있어요~',
             '지금 여러분이 있는 곳의 이름이에요!'
         ];
 
@@ -118,6 +119,7 @@ class EscapeGame {
     // ===== 게임 시작 / 타이머 =====
     startGame() {
         this.startTime = Date.now();
+        this.transitioning = false;
         this.showScreen('game-screen');
         this.updateProgressBar();
         this.loadPuzzle();
@@ -341,17 +343,17 @@ class EscapeGame {
 
     // ===== 퍼즐 4: 키즈 - 킨더유니버스 캐릭터 맞추기 =====
     loadKidsPuzzle(area, stage) {
-        // 캐릭터 풀 (이미지 + 친근한 설명)
+        // 캐릭터 풀 (캐릭터별 개별 이미지 + 친근한 설명)
         const allChars = [
-            { name: '트트', desc: '🌳 호기심 많은 능동적인 나무 친구예요!', img: 'images/1.png' },
-            { name: '랄라', desc: '😄 항상 해맑고 놀기를 좋아하는 아이예요!', img: 'images/1.png' },
-            { name: '달리', desc: '🐶 킨더유니버스까지 따라온 강아지 친구예요!', img: 'images/1.png' },
-            { name: '소소', desc: '🌸 릴라를 쫓아다니며 도와주는 요정이에요!', img: 'images/2.jpeg' },
-            { name: '스티븐', desc: '🤖 책으로 세상을 배우는 똑똑한 로봇이에요!', img: 'images/2.jpeg' },
-            { name: '루카', desc: '🎀 아무 생각 없이 사는 귀여운 요정이에요!', img: 'images/2.jpeg' },
-            { name: '모가나', desc: '🌿 불안과 걱정을 먹는 이끼 친구예요!', img: 'images/3.jpeg' },
-            { name: '알롱', desc: '🧦 코가 양말로 되어 있는 패셔니스타예요!', img: 'images/3.jpeg' },
-            { name: '더스틴', desc: '🌻 모든 걸 알고 있는 척척박사 꽃이에요!', img: 'images/3.jpeg' },
+            { name: '소소', desc: '🌸 릴라를 쫓아다니며 도와주는 요정이에요!', img: 'images/SOSO.png?v=7' },
+            { name: '스티븐', desc: '🤖 책으로 세상을 배우는 똑똑한 로봇이에요!', img: 'images/STIVEN.png?v=7' },
+            { name: '루카', desc: '🎀 아무 생각 없이 사는 귀여운 요정이에요!', img: 'images/LUKA.png?v=7' },
+            { name: '모가나', desc: '🌿 불안과 걱정을 먹는 이끼 친구예요!', img: 'images/MOGANA.png?v=7' },
+            { name: '알롱', desc: '🧦 코가 양말로 되어 있는 패셔니스타예요!', img: 'images/ALLONG.png?v=7' },
+            { name: '더스틴', desc: '🌻 모든 걸 알고 있는 척척박사 꽃이에요!', img: 'images/DUSTIN.png?v=7' },
+            { name: '트트', desc: '🌳 호기심 많은 능동적인 나무 친구예요!', img: 'images/TUTU.png?v=7' },
+            { name: '랄라', desc: '😄 항상 해맑고 놀기를 좋아하는 아이예요!', img: 'images/LALLA.png?v=7' },
+            { name: '달리', desc: '🐶 킨더유니버스까지 따라온 강아지 친구예요!', img: 'images/DALLI.png?v=7' },
         ];
 
         // 3문제 랜덤 선택
@@ -365,9 +367,11 @@ class EscapeGame {
             <p class="puzzle-description">${stage.description}</p>
             <div class="puzzle-content">
                 <div class="kids-quiz">
-                    <img id="kids-char-img" src="${first.img}" alt="캐릭터" class="puzzle-image" style="margin-bottom:15px;">
-                    <div class="kids-emoji" id="kids-desc" style="font-size:16px; background:var(--bg-card); padding:15px; border-radius:12px; margin-bottom:15px;">${first.desc}</div>
-                    <p class="kids-question">이 친구의 이름은? <span id="kids-progress">(1/3)</span></p>
+                    <div class="kids-char-card">
+                        <img id="kids-char-img" src="${first.img}" alt="캐릭터">
+                    </div>
+                    <div class="kids-desc" id="kids-desc">${first.desc}</div>
+                    <p class="kids-question">이 캐릭터의 이름은 뭘까요? <span id="kids-progress">(1/3)</span></p>
                     <div class="kids-choices" id="kids-choices"></div>
                 </div>
             </div>
@@ -396,23 +400,22 @@ class EscapeGame {
             btn.addEventListener('click', () => {
                 if (btn.textContent === current.name) {
                     // 정답
+                    this.showFeedback(true);
                     this.currentQuizIndex++;
-                    if (this.currentQuizIndex >= quiz.length) {
-                        this.stageClear();
-                    } else {
-                        this.showFeedback(true);
-                        setTimeout(() => {
+                    setTimeout(() => {
+                        if (this.currentQuizIndex >= quiz.length) {
+                            this.stageClear();
+                        } else {
                             const next = quiz[this.currentQuizIndex];
                             document.getElementById('kids-char-img').src = next.img;
                             document.getElementById('kids-desc').textContent = next.desc;
                             document.getElementById('kids-progress').textContent = `(${this.currentQuizIndex + 1}/3)`;
                             this.renderKidsChoices();
-                        }, 800);
-                    }
+                        }
+                    }, 800);
                 } else {
                     // 오답 - 같은 문제 다시
                     this.showFeedback(false);
-                    setTimeout(() => this.renderKidsChoices(), 800);
                 }
             });
         });
@@ -504,6 +507,8 @@ class EscapeGame {
 
     // ===== 공통: 스테이지 클리어 =====
     stageClear() {
+        if (this.transitioning) return;
+        this.transitioning = true;
         this.showFeedback(true);
         setTimeout(() => {
             this.currentStage++;
@@ -513,6 +518,7 @@ class EscapeGame {
                 this.updateProgressBar();
                 this.loadPuzzle();
             }
+            this.transitioning = false;
         }, 1200);
     }
 
